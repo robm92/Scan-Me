@@ -81,10 +81,9 @@
                                _employeeList = [NSMutableArray arrayWithArray:sortedArray];
                                [self.lstEmployees reloadData];
                                
-                               
+                               //release spinner animation
+                               [[self.view viewWithTag:12] removeFromSuperview];
                            }];
-    //release spinner animation
-    [[self.view viewWithTag:12] removeFromSuperview];
     
 }
 
@@ -129,15 +128,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //UIAlertView *messageAlert = [[UIAlertView alloc]
-                                 //initWithTitle:@"Row Selected" message:@"You've selected a row" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    
-    // Display Alert Message
-    //[messageAlert show];
-    
     [self performSegueWithIdentifier:@"EmployeeDetailSegue" sender:self];
-    
-    
 }
 
 //number rows in list

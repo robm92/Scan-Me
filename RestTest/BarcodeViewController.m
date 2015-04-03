@@ -111,7 +111,27 @@
             
             //if the serial exists
             if([self checkIfCreated:detectionString])
-            [self assignAsset:detectionString];
+            {
+                //if serial is assigned to someone already
+                if([self checkIfAlreadyAssigned:detectionString])
+                {
+                    NSArray *stack = self.tabBarController.viewControllers;
+                    Assets *assets = stack[stack.count-1];
+                    
+                    //unwind segue before changing tab - tidy up
+                    [self performSegueWithIdentifier:@"UnwindToEmployeeDetails" sender:self];
+                    
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Asset already assigned"
+                                                                    message:@"This asset already belongs to someone. Unassign it before assigning it to another user"
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"OK"
+                                                          otherButtonTitles: nil];
+                    [alert show];
+                }
+                else
+                //if it exists but has not been assigned to someone
+                [self assignAsset:detectionString];
+            }
             
             else{
                 //serial does not exist so must be added first.
@@ -146,6 +166,41 @@
     
     NSMutableDictionary *json;
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:employeePOST]];
+    NSURLResponse *response = nil;
+    NSError *error = nil;
+    //getting the data
+    NSData *newData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+    //json parse
+    NSString *responseString = [[NSString alloc] initWithData:newData encoding:NSUTF8StringEncoding];
+    json = [NSJSONSerialization JSONObjectWithData:newData
+                                           options:0
+                                             error:nil];
+    NSLog(@"Async JSON: %@", json);//output the json dictionary raw
+    
+    NSArray * responseArr = json[@"items"];
+    
+    for(NSDictionary * dict in responseArr)//check serial against existing serials
+    {
+        NSString * serial = [dict valueForKey:@"serial"];
+        
+        if([detectionString isEqualToString:serial])
+        {
+            result = YES;
+        }
+    }
+    
+    return result;
+}
+
+-(BOOL) checkIfAlreadyAssigned:(NSString*) detectionString
+{
+    
+    //checks if the item has already been assigned to someone
+    
+    result = NO;
+    
+    NSMutableDictionary *json;
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://77.100.69.163:8888/ords/rob/hr/employees/SerialCheck"]];
     NSURLResponse *response = nil;
     NSError *error = nil;
     //getting the data

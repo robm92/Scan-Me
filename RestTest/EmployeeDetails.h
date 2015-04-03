@@ -17,4 +17,6 @@
 @property (strong, nonatomic) IBOutlet UITextField *txtFirstName;
 @property (strong, nonatomic) IBOutlet UITextField *txtSecondName;
 
+- (void)hideDeleteButton:(id)obj;
+
 @end

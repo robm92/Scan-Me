@@ -8,15 +8,17 @@
 
 #import "EmployeeDetails.h"
 #import "Department.h"
+#import "Asset.h"
 #define departmentGET @"http://77.100.69.163:8888/ords/rob/hr/Department"
 #define employeePOST @"http://77.100.69.163:8888/ords/rob/hr/employees/"
 
 @interface EmployeeDetails ()
 {
     NSMutableArray *_pickerData;
-    NSArray *_listData;
+    NSMutableArray *_listData;
     NSInteger selectedEmployee;
     Employee *passedEmp;
+    NSIndexPath *selectedRow;
 }
 @end
 @implementation EmployeeDetails
@@ -29,7 +31,7 @@
     
     // Initialize Data
     _pickerData = [[NSMutableArray alloc] init];
-    _listData = @[@"Blackberry", @"Laptop"];
+    _listData = [[NSMutableArray alloc] init];
     
     // Connect data
     self.deptPicker.dataSource = self;
@@ -41,7 +43,7 @@
     txtFirstName.text = passedEmp.FirstName;
     txtSecondName.text = passedEmp.SecondName;
     
-    
+    [self getAssignedAssets];
     
 }
 //number rows in list
@@ -60,8 +62,15 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:simpleTableIdentifier];
     }
     
-    cell.textLabel.text = [_listData objectAtIndex:indexPath.row];
-    return cell;
+    @try {
+        Asset *asset = [[Asset alloc] init];
+        asset = [_listData objectAtIndex:indexPath.row];
+        cell.textLabel.text = asset.Asset_name;
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Failed trying to add Assets to listView - %@", exception.reason);
+    }
+        return cell;
 }
 
 // The number of columns of data
@@ -127,8 +136,104 @@
     //release spinner animation
     //[[self.view viewWithTag:12] removeFromSuperview];
 }
+
+-(void) getAssignedAssets
+{
+    //debug only - find the real one!
+    NSInteger userID = 71;
+    
+    NSString *assignedAsset = [NSString stringWithFormat:@"http://77.100.69.163:8888/ords/rob/hr/employees/AssignedAsset/%ld",(long)userID];
+    
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:assignedAsset]];
+    
+    __block NSMutableDictionary *json;
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                               json = [NSJSONSerialization JSONObjectWithData:data
+                                                                      options:0
+                                                                        error:nil];
+                               NSLog(@"Async JSON: %@", json);//output the json dictionary raw
+                               
+                               NSArray * responseArr = json[@"items"];
+                               
+                               for(NSDictionary *item in responseArr)//for every department in the responseArr, add their respective details to the arrays
+                               {
+                                   Asset *asset = [[Asset alloc] init];
+                                   asset.Asset_serial = [item valueForKey:@"serial"];
+                                   asset.Asset_name = [item valueForKey:@"asset_name"];
+                                   [_listData addObject:asset];
+                               }
+                               [self.lstEmployeeDetails reloadData];
+                               
+                           }];
+    //release spinner animation
+    [[self.view viewWithTag:12] removeFromSuperview];
+}
 - (IBAction)unwindToEmployeeDetails:(UIStoryboardSegue *)unwindSegue
 {
+    //only reloads what's already stored, might need to reload from DB as well
+    [_listData removeAllObjects];
+    [self getAssignedAssets];
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        //add code here for when you hit delete
+        
+        selectedRow = indexPath;
+        
+        [self performSelector:@selector(hideDeleteButton:) withObject:nil afterDelay:0.1];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Unassign Asset" message:@"Are you sure?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Yes", nil]; [alert show];
+        
+    }
+}
+
+- (void)hideDeleteButton:(id)obj
+{
+    [self.lstEmployeeDetails setEditing:NO animated:YES];
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    // the user clicked OK
+    if (buttonIndex == 1) {
+        
+        [self unassignAsset];
+        [_listData removeAllObjects];
+        [self getAssignedAssets];
+    }
+}
+
+-(void)unassignAsset
+{
+    Asset *asset = [[Asset alloc] init];
+    asset = [_listData objectAtIndex:selectedRow.row];
+    
+    NSDictionary *tmp = [[NSDictionary alloc] initWithObjectsAndKeys:asset.Asset_serial,@"serial" ,nil];
+    
+    NSError *error;
+    NSData *jsonRequestData = [NSJSONSerialization dataWithJSONObject:tmp options:0 error:&error];
+
+    NSURL *url = [NSURL URLWithString:@"http://77.100.69.163:8888/ords/rob/hr/employees/UnassignAsset"];
+    //the request
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20];
+    
+    NSLog(@"The Json post request: %@", request);
+    
+    //bind request with jsonrequestdata
+    [request setHTTPMethod:@"POST"]; //n.b its a post request, not get
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonRequestData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:jsonRequestData];//set jsonRequestData into body
+    
+    //send sync request
+    NSURLResponse *response = nil;
+    
+    NSData *result = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+    NSLog(@"The Json post result: %@", result);
+
 }
 
 @end

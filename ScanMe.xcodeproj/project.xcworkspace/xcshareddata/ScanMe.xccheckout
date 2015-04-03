@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>E23C2FC6-9F04-4A95-8D6D-D32C8D93FE11</string>
+	<key>IDESourceControlProjectName</key>
+	<string>ScanMe</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>478B1E82E95906EDD59CB85DE6CB4401987BE469</key>
+		<string>https://github.com/noobstix/ScanMe-17-02-15.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>ScanMe.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>478B1E82E95906EDD59CB85DE6CB4401987BE469</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/noobstix/ScanMe-17-02-15.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>478B1E82E95906EDD59CB85DE6CB4401987BE469</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>478B1E82E95906EDD59CB85DE6CB4401987BE469</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ScanMe%2017:02:15</string>
+		</dict>
+	</array>
+</dict>
+</plist>

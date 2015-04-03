@@ -35,6 +35,8 @@
 		D4AC46521A7A8DB80092158F /* beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D4AC46511A7A8DB80092158F /* beep.mp3 */; };
 		D4AC46551A7A9A9E0092158F /* XYPieChart.m in Sources */ = {isa = PBXBuildFile; fileRef = D4AC46541A7A9A9E0092158F /* XYPieChart.m */; };
 		D4AC46581A7A9AF70092158F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4AC46571A7A9AF70092158F /* QuartzCore.framework */; };
+		D4AD2DE61ACEBAAA004428F0 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D4AD2DE41ACEBAAA004428F0 /* Model.xcdatamodeld */; };
+		D4AD2DF01ACECDC9004428F0 /* Asset.m in Sources */ = {isa = PBXBuildFile; fileRef = D4AD2DEF1ACECDC9004428F0 /* Asset.m */; };
 		D4E2092D1A712E4300D52EAE /* barcode.png in Resources */ = {isa = PBXBuildFile; fileRef = D4E2092A1A712E4300D52EAE /* barcode.png */; };
 		D4E2092E1A712E4300D52EAE /* manager.png in Resources */ = {isa = PBXBuildFile; fileRef = D4E2092B1A712E4300D52EAE /* manager.png */; };
 		D4E2092F1A712E4300D52EAE /* package.png in Resources */ = {isa = PBXBuildFile; fileRef = D4E2092C1A712E4300D52EAE /* package.png */; };
@@ -100,6 +102,9 @@
 		D4AC46531A7A9A9E0092158F /* XYPieChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYPieChart.h; sourceTree = "<group>"; };
 		D4AC46541A7A9A9E0092158F /* XYPieChart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYPieChart.m; sourceTree = "<group>"; };
 		D4AC46571A7A9AF70092158F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		D4AD2DE51ACEBAAA004428F0 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		D4AD2DEE1ACECDC9004428F0 /* Asset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Asset.h; sourceTree = "<group>"; };
+		D4AD2DEF1ACECDC9004428F0 /* Asset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Asset.m; sourceTree = "<group>"; };
 		D4E2092A1A712E4300D52EAE /* barcode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = barcode.png; sourceTree = "<group>"; };
 		D4E2092B1A712E4300D52EAE /* manager.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = manager.png; sourceTree = "<group>"; };
 		D4E2092C1A712E4300D52EAE /* package.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = package.png; sourceTree = "<group>"; };
@@ -132,6 +137,7 @@
 		D443BAF919F53FAF009BB5D4 = {
 			isa = PBXGroup;
 			children = (
+				D4AD2DE41ACEBAAA004428F0 /* Model.xcdatamodeld */,
 				D463FC2A1A7E971D00509871 /* Media.xcassets */,
 				D443BB0419F53FAF009BB5D4 /* RestTest */,
 				D443BB1E19F53FAF009BB5D4 /* RestTestTests */,
@@ -155,6 +161,7 @@
 		D443BB0419F53FAF009BB5D4 /* RestTest */ = {
 			isa = PBXGroup;
 			children = (
+				D4AD2DEA1ACEBBA9004428F0 /* Asset */,
 				D47388E41A938653004EA9DD /* Department */,
 				D46B071E1A8B8D1200FE80B0 /* Employee */,
 				D4AC46561A7A9AA40092158F /* PieChart */,
@@ -257,6 +264,15 @@
 				D473DDE11A7AA429003E250B /* Dashboard.m */,
 			);
 			name = PieChart;
+			sourceTree = "<group>";
+		};
+		D4AD2DEA1ACEBBA9004428F0 /* Asset */ = {
+			isa = PBXGroup;
+			children = (
+				D4AD2DEE1ACECDC9004428F0 /* Asset.h */,
+				D4AD2DEF1ACECDC9004428F0 /* Asset.m */,
+			);
+			name = Asset;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -376,6 +392,8 @@
 				D465C09B1A02998F00BC278B /* BarcodeViewController.m in Sources */,
 				D473DDE21A7AA429003E250B /* Dashboard.m in Sources */,
 				D463FC1C1A7E7F7E00509871 /* NewEmployee.m in Sources */,
+				D4AD2DE61ACEBAAA004428F0 /* Model.xcdatamodeld in Sources */,
+				D4AD2DF01ACECDC9004428F0 /* Asset.m in Sources */,
 				D463FC1F1A7E817900509871 /* EmployeeDetails.m in Sources */,
 				D443BB0819F53FAF009BB5D4 /* main.m in Sources */,
 				D443BB2D19F542EE009BB5D4 /* IOSRequest.m in Sources */,
@@ -596,6 +614,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		D4AD2DE41ACEBAAA004428F0 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				D4AD2DE51ACEBAAA004428F0 /* Model.xcdatamodel */,
+			);
+			currentVersion = D4AD2DE51ACEBAAA004428F0 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = D443BAFA19F53FAF009BB5D4 /* Project object */;
 }
