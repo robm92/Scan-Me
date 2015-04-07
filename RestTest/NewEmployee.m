@@ -19,7 +19,7 @@
 @end
 
 @implementation NewEmployee
-@synthesize txtFirstName,txtSecondName,pickerDept;
+@synthesize txtFirstName,txtSecondName,pickerDept,btnAdd;
 
 - (void)viewDidLoad
 {
@@ -34,6 +34,10 @@
     // Connect data
     self.pickerDept.dataSource = self;
     self.pickerDept.delegate = self;
+    
+    //round corners of button
+    btnAdd.layer.cornerRadius = 10;
+    btnAdd.clipsToBounds = YES;
     
     [pickerDept selectRow:2 inComponent:0 animated:NO];
     
@@ -139,7 +143,5 @@
     [self jsonPostRequest:postData];
     
 }
-
-
 
 @end

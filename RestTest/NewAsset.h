@@ -10,5 +10,10 @@
 
 @interface NewAsset : UIViewController <UIPickerViewDataSource, UIPickerViewDelegate>
 
+@property (strong, nonatomic) IBOutlet UIButton *btnAdd;
 @property (weak, nonatomic) IBOutlet UIPickerView *pickerAsset;
+- (IBAction)btnAdd:(id)sender;
+@property (strong, nonatomic) IBOutlet UIPickerView *typePicker;
+@property (strong, nonatomic) IBOutlet UITextField *txtName;
+@property (strong, nonatomic) IBOutlet UITextField *txtCost;
 @end

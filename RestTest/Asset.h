@@ -10,15 +10,15 @@
 
 @interface Asset : NSObject
 
-@property (nonatomic, retain) NSNumber * Asset_ID;
+@property (nonatomic, assign) NSInteger Asset_ID;
 @property (nonatomic, retain) NSString * Asset_name;
 @property (nonatomic, retain) NSString * Asset_type;
 @property (nonatomic, retain) NSString * Asset_cost;
 @property (nonatomic, retain) NSString * Asset_serial;
-@property (nonatomic, retain) NSNumber * Asset_stock;
+@property (nonatomic, assign) NSInteger Asset_stock;
 
 - (id) initWithName: (NSString *) asset_name asset_type: (NSString *) asset_type
-         asset_cost: (NSString *) asset_cost asset_ID: (NSNumber *) asset_ID
-        asset_stock: (NSNumber *) asset_stock asset_serial: (NSString *) asset_serial;
+         asset_cost: (NSString *) asset_cost asset_ID: (NSInteger) asset_ID
+        asset_stock: (NSInteger ) asset_stock asset_serial: (NSString *) asset_serial;
 
 @end

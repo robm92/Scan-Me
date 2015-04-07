@@ -11,6 +11,7 @@
 @interface Employees : UIViewController <UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *lstEmployees;
 @property (weak, nonatomic) IBOutlet UITextField *txtSearch;
+@property (strong, nonatomic) IBOutlet UIButton *btnAddEmp;
 
 - (void)hideDeleteButton:(id)obj;
 

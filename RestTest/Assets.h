@@ -11,5 +11,9 @@
 @interface Assets : UIViewController<UITableViewDelegate, UITableViewDataSource>
 
 @property (weak, nonatomic) IBOutlet UITableView *lstAssets;
+@property (strong, nonatomic) IBOutlet UIButton *btnAdd;
+@property (strong, nonatomic) IBOutlet UITextField *txtSearch;
+@property (strong, nonatomic) NSMutableArray *_assetList;
+-(void) getAssets;
 
 @end

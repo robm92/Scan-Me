@@ -1,11 +1,11 @@
 
 
 #import <AVFoundation/AVFoundation.h>
-#import "BarcodeViewController.h"
-#define employeePOST @"http://77.100.69.163:8888/ords/rob/hr/employees/addasset"
+#import "InventoryScanner.h"
+#define AssetScan @"http://77.100.69.163:8888/ords/rob/hr/Assets/ScanAsset"
 #import "Assets.h"
 
-@interface BarcodeViewController () <AVCaptureMetadataOutputObjectsDelegate>
+@interface InventoryScanner () <AVCaptureMetadataOutputObjectsDelegate>
 {
     AVCaptureSession *_session;
     AVCaptureDevice *_device;
@@ -21,11 +21,11 @@
     BOOL result;
     
     //employee to assign to
-    Employee *passedEmp;
+    Asset *passedAsset;
 }
 @end
 
-@implementation BarcodeViewController
+@implementation InventoryScanner
 
 - (void)viewDidLoad
 {
@@ -107,51 +107,30 @@
         if (detectionString != nil && scanComplete == NO)
         {
             _label.text = detectionString;
-             [scanResult addObject:detectionString];
+            [scanResult addObject:detectionString];
             [_audioPlayer play];
             AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
             scanComplete = YES;
             
             //if the serial exists
-            if([self checkIfCreated:detectionString])
-            {
-                //if serial is assigned to someone already
-                if([self checkIfAlreadyAssigned:detectionString])
-                {
-                    NSArray *stack = self.tabBarController.viewControllers;
-                    Assets *assets = stack[stack.count-1];
-                    
-                    //unwind segue before changing tab - tidy up
-                    [self performSegueWithIdentifier:@"UnwindToEmployeeDetails" sender:self];
-                    
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Asset already assigned"
-                                                                    message:@"This asset already belongs to someone. Unassign it before assigning it to another user"
-                                                                   delegate:nil
-                                                          cancelButtonTitle:@"OK"
-                                                          otherButtonTitles: nil];
-                    [alert show];
-                }
-                else
-                //if it exists but has not been assigned to someone
-                [self assignAsset:detectionString];
+            if([self checkIfExists:detectionString])
+            {                
+                //unwind segue before changing tab - tidy up
+                [self performSegueWithIdentifier:@"unwindFromScan" sender:self];
+                
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"An asset with this serial already exists"
+                                                                message:@"Please scan a new serial"
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles: nil];
+                [alert show];
+
             }
             
             else{
-                //serial does not exist so must be added first.
-                NSArray *stack = self.tabBarController.viewControllers;
-                Assets *assets = stack[stack.count-1];
                 
-                //unwind segue before changing tab - tidy up
-                [self performSegueWithIdentifier:@"UnwindToEmployeeDetails" sender:self];
+                [self assignAsset:detectionString];
                 
-                [self.tabBarController setSelectedIndex:1];
-                
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Asset not found"
-                                                                message:@"Asset must be added before being assigned"
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"OK" 
-                                                      otherButtonTitles: nil];
-                [alert show];
             }
         }
         else if (detectionString == nil)
@@ -160,42 +139,8 @@
     
     _highlightView.frame = highlightViewRect;
 }
--(BOOL) checkIfCreated:(NSString*) detectionString
-{
 
-    //checks if the serial number exists already
-
-    result = NO;
-    
-    NSMutableDictionary *json;
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:employeePOST]];
-    NSURLResponse *response = nil;
-    NSError *error = nil;
-    //getting the data
-    NSData *newData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-    //json parse
-    NSString *responseString = [[NSString alloc] initWithData:newData encoding:NSUTF8StringEncoding];
-    json = [NSJSONSerialization JSONObjectWithData:newData
-                                           options:0
-                                             error:nil];
-    NSLog(@"Async JSON: %@", json);//output the json dictionary raw
-    
-    NSArray * responseArr = json[@"items"];
-    
-    for(NSDictionary * dict in responseArr)//check serial against existing serials
-    {
-        NSString * serial = [dict valueForKey:@"serial"];
-        
-        if([detectionString isEqualToString:serial])
-        {
-            result = YES;
-        }
-    }
-    
-    return result;
-}
-
--(BOOL) checkIfAlreadyAssigned:(NSString*) detectionString
+-(BOOL) checkIfExists:(NSString*) detectionString
 {
     
     //checks if the item has already been assigned to someone
@@ -203,7 +148,7 @@
     result = NO;
     
     NSMutableDictionary *json;
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://77.100.69.163:8888/ords/rob/hr/employees/SerialCheck"]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://77.100.69.163:8888/ords/rob/hr/Asset/ScanAsset"]];
     NSURLResponse *response = nil;
     NSError *error = nil;
     //getting the data
@@ -233,16 +178,16 @@
 - (void) assignAsset:(NSString*) detectionString
 {
     //debug only - change to selected employee!
-    NSInteger selectedEmployee = passedEmp.EmployeeID;
+    NSInteger selectedAsset = passedAsset.Asset_ID;
     
     //create a dictionary with employee ID and the serial obtained from scan.
-    NSDictionary *tmp = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInteger:selectedEmployee],@"EMP_ID",detectionString,@"SERIAL",[NSNumber numberWithInteger:1],@"QUANTITY", nil];
+    NSDictionary *tmp = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInteger:selectedAsset],@"ASSET_ID",detectionString,@"SERIAL", nil];
     
     NSError *error;
     NSData *jsonRequestData = [NSJSONSerialization dataWithJSONObject:tmp options:0 error:&error];
     
     //URL for the request
-    NSURL *url = [NSURL URLWithString:employeePOST];
+    NSURL *url = [NSURL URLWithString:AssetScan];
     //the request
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20];
     NSLog(@"The Json post request: %@", request);
@@ -259,14 +204,14 @@
     
     NSData *result = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
     NSLog(@"The Json post result: %@", response);
-
+    
     //when done, go back to employee details
-    [self performSegueWithIdentifier:@"UnwindToEmployeeDetails" sender:self];
+    [self performSegueWithIdentifier:@"unwindFromScan" sender:self];
 }
 
-- (void) passEmp:(Employee*)emp{
-    passedEmp = [[Employee alloc] init];
-    passedEmp = emp;
+- (void) passAsset:(Asset*)asset{
+    passedAsset = [[Asset alloc] init];
+    passedAsset = asset;
     
 }
 

@@ -13,8 +13,8 @@
 @synthesize Asset_cost,Asset_ID,Asset_name,Asset_stock,Asset_type,Asset_serial;
 
 - (id) initWithName: (NSString *) asset_name asset_type: (NSString *) asset_type
-         asset_cost: (NSString *) asset_cost asset_ID: (NSNumber *) asset_ID
-        asset_stock: (NSNumber *) asset_stock asset_serial: (NSString *) asset_serial;
+         asset_cost: (NSString *) asset_cost asset_ID: (NSInteger) asset_ID
+        asset_stock: (NSInteger ) asset_stock asset_serial: (NSString *) asset_serial;
 {
     self = [super init];
     if (self)

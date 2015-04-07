@@ -16,6 +16,8 @@
 - (void) passEmp:(Employee*)emp;
 @property (strong, nonatomic) IBOutlet UITextField *txtFirstName;
 @property (strong, nonatomic) IBOutlet UITextField *txtSecondName;
+@property (strong, nonatomic) IBOutlet UIButton *btnEdit;
+@property (strong, nonatomic) IBOutlet UIButton *btnAssign;
 
 - (void)hideDeleteButton:(id)obj;
 

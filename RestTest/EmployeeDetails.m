@@ -9,6 +9,7 @@
 #import "EmployeeDetails.h"
 #import "Department.h"
 #import "Asset.h"
+#import "BarcodeViewController.h"
 #define departmentGET @"http://77.100.69.163:8888/ords/rob/hr/Department"
 #define employeePOST @"http://77.100.69.163:8888/ords/rob/hr/employees/"
 
@@ -23,7 +24,7 @@
 @end
 @implementation EmployeeDetails
 
-@synthesize lstEmployeeDetails,txtSecondName,txtFirstName;
+@synthesize lstEmployeeDetails,txtSecondName,txtFirstName,btnAssign,btnEdit;
 
 - (void)viewDidLoad
 {
@@ -42,6 +43,12 @@
     
     txtFirstName.text = passedEmp.FirstName;
     txtSecondName.text = passedEmp.SecondName;
+    
+    //round corners of buttons
+    btnEdit.layer.cornerRadius = 10;
+    btnEdit.clipsToBounds = YES;
+    btnAssign.layer.cornerRadius = 10;
+    btnAssign.clipsToBounds = YES;
     
     [self getAssignedAssets];
     
@@ -130,7 +137,7 @@
                                
                                
                                [self.deptPicker reloadAllComponents];
-                               [_deptPicker selectRow:passedEmp.DepartmentID inComponent:0 animated:YES];
+                               [_deptPicker selectRow:passedEmp.DepartmentID inComponent:0 animated:NO];
                                
                            }];
     //release spinner animation
@@ -140,7 +147,7 @@
 -(void) getAssignedAssets
 {
     //debug only - find the real one!
-    NSInteger userID = 71;
+    NSInteger userID = passedEmp.EmployeeID;
     
     NSString *assignedAsset = [NSString stringWithFormat:@"http://77.100.69.163:8888/ords/rob/hr/employees/AssignedAsset/%ld",(long)userID];
     
@@ -170,6 +177,8 @@
     //release spinner animation
     [[self.view viewWithTag:12] removeFromSuperview];
 }
+
+
 - (IBAction)unwindToEmployeeDetails:(UIStoryboardSegue *)unwindSegue
 {
     //only reloads what's already stored, might need to reload from DB as well
@@ -234,6 +243,97 @@
     NSData *result = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
     NSLog(@"The Json post result: %@", result);
 
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    // Make sure your segue name in storyboard is the same as this line
+    if ([[segue identifier] isEqualToString:@"ScanAssign"])
+    {
+        // Get reference to the destination view controller
+        BarcodeViewController *bvc = [segue destinationViewController];
+
+        // Pass any objects to the view controller here, like...
+        [bvc passEmp:passedEmp];
+        
+        
+    }
+}
+- (IBAction)btnEdit:(id)sender
+{
+    
+    if([txtFirstName.text isEqualToString:@""])
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid input"
+                                                        message:@"Please enter fields correctly"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles: nil];
+        [alert show];
+    }
+    else if([txtSecondName.text isEqualToString:@""])
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid input"
+                                                        message:@"Please enter fields correctly"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        NSString *EMP_FN = txtFirstName.text;
+        passedEmp.FirstName = txtFirstName.text;
+        NSString *EMP_SN =  txtSecondName.text;
+        passedEmp.SecondName = txtSecondName.text;
+        NSInteger DEPT_ID = [self.deptPicker selectedRowInComponent:0];
+        passedEmp.DepartmentID = DEPT_ID;
+        
+        NSDictionary *tmp = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInteger:passedEmp.EmployeeID],@"EMP_ID",EMP_FN,@"EMP_FN",EMP_SN,@"EMP_SN",[NSNumber numberWithInteger:DEPT_ID],@"DEPT_ID", nil];
+        
+        NSError *error;
+        NSData *postData = [NSJSONSerialization dataWithJSONObject:tmp options:0 error:&error];
+        [self jsonPostRequest:postData];
+        //refresh data
+        [_listData removeAllObjects];
+        [self retrieveData];
+        [self.view endEditing:YES];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Edit complete"
+                                                        message:@"Employee details edited successfuly"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles: nil];
+        [alert show];
+    }
+
+    
+}
+-(id)jsonPostRequest:(NSData *)jsonRequestData
+{
+    //URL for the request
+    NSURL *url = [NSURL URLWithString:@"http://77.100.69.163:8888/ords/rob/hr/employees/EditEmployee"];
+    //the request
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20];
+    NSLog(@"The Json post request: %@", request);
+    
+    //bind request with jsonrequestdata
+    [request setHTTPMethod:@"POST"]; //n.b its a post request, not get
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonRequestData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:jsonRequestData];//set jsonRequestData into body
+    
+    //send sync request
+    NSURLResponse *response = nil;
+    NSError *error = nil;
+    
+    NSData *result = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+    NSLog(@"The Json post result: %@", result);
+    if(error ==nil)
+        return result;
+    
+    return nil;
+    
 }
 
 @end

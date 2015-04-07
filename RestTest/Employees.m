@@ -9,6 +9,7 @@
 #import "Employees.h"
 #import "Employee.h"
 #import "EmployeeDetails.h"
+#import <QuartzCore/QuartzCore.h>
 #define employeeGET @"http://77.100.69.163:8888/ords/rob/hr/employees/"
 #define employeeDELETE @"http://77.100.69.163:8888/ords/rob/hr/employees/delete/"
 
@@ -22,7 +23,7 @@
 @end
 
 @implementation Employees
-@synthesize lstEmployees,txtSearch;
+@synthesize lstEmployees,txtSearch,btnAddEmp;
 
 - (void)viewDidLoad
 {
@@ -39,6 +40,11 @@
     _employeeList = [[NSMutableArray alloc] init];
     self.lstEmployees.dataSource = self;
     self.lstEmployees.delegate = self;
+    
+    //round corners of button
+    btnAddEmp.layer.cornerRadius = 10;
+    btnAddEmp.clipsToBounds = YES;
+    
     [super viewDidLoad];
     
 }
@@ -120,9 +126,6 @@
     [_employeeList removeAllObjects];
     [self retrieveData];
     [self.lstEmployees reloadData];
-//    ConfirmationViewController *cc = [unwindSegue sourceViewController];
-//    [self setAccountInfo:[cc accountInfo]];
-//    [self setShowingSuccessView:YES];
 }
 
 
@@ -162,9 +165,7 @@
         [self performSelector:@selector(hideDeleteButton:) withObject:nil afterDelay:0.1];
         
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Delete Employee" message:@"Are you sure?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Yes", nil]; [alert show];
-
-        
-        
+  
     }
 }
 
@@ -249,6 +250,8 @@
         
         // Pass any objects to the view controller here, like...
         [ed passEmp:emp];
+
+        
     }
 }
 

@@ -16,6 +16,7 @@
 @property (strong, nonatomic) IBOutlet UITextField *txtFirstName;
 @property (strong, nonatomic) IBOutlet UITextField *txtSecondName;
 - (IBAction)btnAddEmployee:(id)sender;
+@property (strong, nonatomic) IBOutlet UIButton *btnAdd;
 
 
 @end
