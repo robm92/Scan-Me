@@ -10,10 +10,10 @@
 
 @implementation Department
 
-@synthesize Name,DeptID,CostCentre;
+@synthesize Name,DeptID,CostCentre,Spend;
 
 - (id) initWithName: (NSString *) name costCentre: (NSString *) costCentre
-             deptID: (NSInteger *) deptID;
+             deptID: (NSInteger *) deptID spend: (NSInteger *) spend;
 {
     self = [super init];
     if (self)
@@ -21,6 +21,7 @@
         Name = name;
         DeptID = *deptID;
         CostCentre = costCentre;
+        Spend = *spend;
     }
     return self;
 }

@@ -7,12 +7,15 @@
 //
 
 #import "Dashboard.h"
+#import "Department.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface Dashboard ()
 {
     NSArray *_listData;
     NSArray *_reportData;
+    NSMutableArray *tempDepartments;
+    NSMutableArray *departments;
 }
 @end
 
@@ -43,7 +46,8 @@
     //initialise data
     _listData = @[@"SS", @"Fin", @"Infra", @"AS", @"Sec"];
     _reportData = @[@"Spending per Department", @"Low Stock Items"];
-    
+    tempDepartments = [[NSMutableArray alloc] init];
+    departments = [[NSMutableArray alloc] init];
     // Connect data
     self.dashTable.dataSource = self;
     self.dashTable.delegate = self;
@@ -79,6 +83,8 @@
     
     //rotate up arrow
     self.downArrow.transform = CGAffineTransformMakeRotation(M_PI);
+    
+    [self getDepartmentSpend];
 }
 
 - (void)viewDidUnload
@@ -265,6 +271,83 @@
     return cell;
 }
 
+-(void) getDepartmentSpend
+{
+    
+    NSString *assignedAsset = [NSString stringWithFormat:@"http://77.100.69.163:8888/ords/rob/hr/Dashboard/DepartmentSpend"];
+    
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:assignedAsset]];
+    
+    __block NSMutableDictionary *json;
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                               json = [NSJSONSerialization JSONObjectWithData:data
+                                                                      options:0
+                                                                        error:nil];
+                               NSLog(@"Async JSON: %@", json);//output the json dictionary raw
+                               
+                               NSArray * responseArr = json[@"items"];
+                               
+                               for(NSDictionary *item in responseArr)//for every department in the responseArr, add their respective details to the arrays
+                               {
+                                   Department *dept = [[Department alloc] init];
+                                   dept.CostCentre = [item valueForKey:@"cost_centre"];
+                                   dept.Spend = [self turnIntoNumber:[item valueForKey:@"asset_cost"]];
+                                   
+                                   [tempDepartments addObject:dept];
+                               }
+                               [self sumOfCostCentres];
+                               
+                               NSLog(@"dept spend");
+                           }];
+    //release spinner animation
+    [[self.view viewWithTag:12] removeFromSuperview];
+}
+-(void) sumOfCostCentres
+{
+    for(int i=0;i<tempDepartments.count; i++)
+    {
+        Department *dept = [tempDepartments objectAtIndex:i];
+        NSInteger spend = dept.Spend;
+        
+        for(int j=i+1;j<tempDepartments.count;j++)
+        {
+            Department *dept2 = [tempDepartments objectAtIndex:j];
+            
+            if ([dept.CostCentre isEqualToString:dept2.CostCentre])
+            {
+                spend = spend + dept2.Spend;
+                [tempDepartments removeObjectAtIndex:j];
+                
+            }
+        }
+        
+        dept.Spend = spend;
+        [departments addObject:dept];
+    }
+    
+}
+
+-(NSInteger) turnIntoNumber:(NSString*) inputString
+{
+    // Intermediate
+    NSString *numberString;
+    
+    NSScanner *scanner = [NSScanner scannerWithString:inputString];
+    NSCharacterSet *numbers = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+    
+    // Throw away characters before the first number.
+    [scanner scanUpToCharactersFromSet:numbers intoString:NULL];
+    
+    // Collect numbers.
+    [scanner scanCharactersFromSet:numbers intoString:&numberString];
+    
+    // Result.
+    NSInteger result = [numberString integerValue];
+    
+    return result;
+}
 
 
 @end

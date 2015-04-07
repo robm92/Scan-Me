@@ -932,7 +932,7 @@
             </objects>
             <point key="canvasLocation" x="2566.4000000000001" y="716.62666666666667"/>
         </scene>
-        <!--Reports-->
+        <!--Dashboard-->
         <scene sceneID="dR4-NS-Fqj">
             <objects>
                 <viewController id="0f1-pC-jbK" customClass="Dashboard" sceneMemberID="viewController">
@@ -1001,7 +1001,7 @@
                             <constraint firstItem="cs9-EW-Dfn" firstAttribute="top" secondItem="GLW-0e-1dZ" secondAttribute="bottom" constant="8" symbolic="YES" id="i3F-we-Rit"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Reports" image="pie_chart-36.png" id="jvK-38-hSV"/>
+                    <tabBarItem key="tabBarItem" title="Dashboard" image="pie_chart-36.png" id="jvK-38-hSV"/>
                     <connections>
                         <outlet property="dashTable" destination="HvJ-cR-sRz" id="XVU-nC-3bW"/>
                         <outlet property="pieChartLeft" destination="QoP-kH-jIF" id="TGC-bJ-wGi"/>

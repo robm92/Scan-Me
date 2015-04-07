@@ -13,9 +13,10 @@
 @property (nonatomic,strong) NSString * Name;
 @property (nonatomic,assign) NSInteger DeptID;
 @property (nonatomic,strong) NSString * CostCentre;
+@property (nonatomic,assign) NSInteger Spend;
 
 
 - (id) initWithName: (NSString *) name costCentre: (NSString *) costCentre
-             deptID: (NSInteger *) deptID;
+             deptID: (NSInteger *) deptID spend: (NSInteger *) spend;
 
 @end
