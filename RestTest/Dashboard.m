@@ -8,13 +8,16 @@
 
 #import "Dashboard.h"
 #import "Department.h"
+#import "Asset.h"
 #import <QuartzCore/QuartzCore.h>
+#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 @interface Dashboard ()
 {
     NSArray *_listData;
     NSArray *_reportData;
     NSMutableArray *tempDepartments;
+    NSMutableArray *stockData;
     NSMutableArray *departments;
 }
 @end
@@ -30,6 +33,7 @@
 @synthesize downArrow = _downArrow;
 @synthesize slices = _slices;
 @synthesize sliceColors = _sliceColors;
+@synthesize lblInfo,stockView;
 
 - (void)didReceiveMemoryWarning
 {
@@ -42,16 +46,26 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //hide other views
+    stockView.hidden = YES;
     
     //initialise data
-    _listData = @[@"SS", @"Fin", @"Infra", @"AS", @"Sec"];
     _reportData = @[@"Spending per Department", @"Low Stock Items"];
     tempDepartments = [[NSMutableArray alloc] init];
     departments = [[NSMutableArray alloc] init];
+    stockData = [[NSMutableArray alloc] init];
+    //[self getDepartmentSpend];
+    
+    _listData = @[@"SS", @"Fin", @"Infra", @"AS", @"Sec"];
+    
     // Connect data
+    self.stockTable.dataSource = self;
+    self.stockTable.delegate = self;
     self.dashTable.dataSource = self;
     self.dashTable.delegate = self;
-
+    self.pieChartLeft.delegate = self;
+    self.pieChartLeft.dataSource = self;
+    
     self.slices = [NSMutableArray arrayWithCapacity:10];
     
     for(int i = 0; i < 5; i ++)
@@ -63,28 +77,26 @@
     [self.pieChartLeft setDataSource:self];
     [self.pieChartLeft setStartPieAngle:M_PI_2];
     [self.pieChartLeft setAnimationSpeed:1.0];
-    [self.pieChartLeft setLabelFont:[UIFont fontWithName:@"Arial" size:14]];
+    [self.pieChartLeft setLabelFont:[UIFont fontWithName:@"HelveticaNeue" size:12]];
     [self.pieChartLeft setLabelRadius:80];
     [self.pieChartLeft setShowPercentage:NO];
     [self.pieChartLeft setPieBackgroundColor:[UIColor colorWithWhite:0.95 alpha:0.3]];
     [self.pieChartLeft setPieCenter:CGPointMake(self.view.bounds.size.width/2,
                                                 self.view.bounds.size.height/3)];
     [self.pieChartLeft setUserInteractionEnabled:YES];
-    [self.pieChartLeft setLabelShadowColor:[UIColor blackColor]];
-    
     [self.percentageLabel.layer setCornerRadius:90];
     
     self.sliceColors =[NSArray arrayWithObjects:
-                       [UIColor colorWithRed:246/255.0 green:155/255.0 blue:0/255.0 alpha:1],
-                       [UIColor colorWithRed:129/255.0 green:195/255.0 blue:29/255.0 alpha:1],
-                       [UIColor colorWithRed:62/255.0 green:173/255.0 blue:219/255.0 alpha:1],
-                       [UIColor colorWithRed:229/255.0 green:66/255.0 blue:115/255.0 alpha:1],
-                       [UIColor colorWithRed:148/255.0 green:141/255.0 blue:139/255.0 alpha:1],nil];
+                       UIColorFromRGB(0xed5252),
+                       UIColorFromRGB(0xF04141),
+                       UIColorFromRGB(0xF01D1D),
+                       UIColorFromRGB(0xF5C4C4),
+                       UIColorFromRGB(0xF58E8E),nil];
     
     //rotate up arrow
     self.downArrow.transform = CGAffineTransformMakeRotation(M_PI);
     
-    [self getDepartmentSpend];
+    
 }
 
 - (void)viewDidUnload
@@ -107,8 +119,17 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [departments removeAllObjects];
+    [self getDepartmentSpend];
     [self.pieChartLeft reloadData];
-    [self.pieChartRight reloadData];
+    
+    double delayInSeconds = 1.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        for (int i = 0; i < 4; i++)
+            [_slices addObject:@(rand()%60+20)];
+        [self updateSlices];
+    });
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -129,10 +150,13 @@
 
 - (NSString *)pieChart:(XYPieChart *)pieChart textForSliceAtIndex:(NSUInteger)index
 {
-    NSString *pieText = [_listData objectAtIndex:index];
-    int pieVal = [[self.slices objectAtIndex:index] intValue];
+    Department *dept = [[Department alloc] init];
+    dept = [departments objectAtIndex:index];
     
-    return [NSString stringWithFormat:@"%@: $%d",pieText,pieVal];
+    NSString *pieText = dept.CostCentre;
+    NSInteger pieVal = dept.Spend;
+    
+    return [NSString stringWithFormat:@"%@: $%ld",pieText,pieVal];
 }
 
 - (IBAction)SliceNumChanged:(id)sender
@@ -148,56 +172,19 @@
 }
 
 - (IBAction)clearSlices {
-    [_slices removeAllObjects];
+    [departments removeAllObjects];
+    [self getDepartmentSpend];
     [self.pieChartLeft reloadData];
-    [self.pieChartRight reloadData];
+    
+    double delayInSeconds = 1.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        for (int i = 0; i < 4; i++)
+            [_slices addObject:@(rand()%60+20)];
+        [self updateSlices];
+    });
 }
 
-- (IBAction)addSliceBtnClicked:(id)sender
-{
-    NSInteger num = [self.numOfSlices.text intValue];
-    if (num > 0) {
-        for (int n=0; n < abs(num); n++)
-        {
-            NSNumber *one = [NSNumber numberWithInt:rand()%60+20];
-            NSInteger index = 0;
-            if(self.slices.count > 0)
-            {
-                switch (self.indexOfSlices.selectedSegmentIndex) {
-                    case 1:
-                        index = rand()%self.slices.count;
-                        break;
-                    case 2:
-                        index = self.slices.count - 1;
-                        break;
-                }
-            }
-            [_slices insertObject:one atIndex:index];
-        }
-    }
-    else if (num < 0)
-    {
-        if(self.slices.count <= 0) return;
-        for (int n=0; n < abs(num); n++)
-        {
-            NSInteger index = 0;
-            if(self.slices.count > 0)
-            {
-                switch (self.indexOfSlices.selectedSegmentIndex) {
-                    case 1:
-                        index = rand()%self.slices.count;
-                        break;
-                    case 2:
-                        index = self.slices.count - 1;
-                        break;
-                }
-                [_slices removeObjectAtIndex:index];
-            }
-        }
-    }
-    [self.pieChartLeft reloadData];
-    [self.pieChartRight reloadData];
-}
 
 - (IBAction)updateSlices
 {
@@ -218,12 +205,14 @@
 
 - (NSUInteger)numberOfSlicesInPieChart:(XYPieChart *)pieChart
 {
-    return self.slices.count;
+    return departments.count;
 }
 
 - (CGFloat)pieChart:(XYPieChart *)pieChart valueForSliceAtIndex:(NSUInteger)index
 {
-    return [[self.slices objectAtIndex:index] intValue];
+    Department *dept = [[Department alloc] init];
+    dept = [departments objectAtIndex:index];
+    return dept.Spend;
 }
 
 - (UIColor *)pieChart:(XYPieChart *)pieChart colorForSliceAtIndex:(NSUInteger)index
@@ -233,42 +222,98 @@
 }
 
 #pragma mark - XYPieChart Delegate
-- (void)pieChart:(XYPieChart *)pieChart willSelectSliceAtIndex:(NSUInteger)index
-{
-    NSLog(@"will select slice at index %d",index);
-}
-- (void)pieChart:(XYPieChart *)pieChart willDeselectSliceAtIndex:(NSUInteger)index
-{
-    NSLog(@"will deselect slice at index %d",index);
-}
-- (void)pieChart:(XYPieChart *)pieChart didDeselectSliceAtIndex:(NSUInteger)index
-{
-    NSLog(@"did deselect slice at index %d",index);
-}
 - (void)pieChart:(XYPieChart *)pieChart didSelectSliceAtIndex:(NSUInteger)index
 {
-    NSLog(@"did select slice at index %d",index);
-    self.selectedSliceLabel.text = [NSString stringWithFormat:@"$%@",[self.slices objectAtIndex:index]];
+    Department *dept = [[Department alloc] init];
+    dept = [departments objectAtIndex:index];
+    lblInfo.text = [NSString stringWithFormat:@"%@ current spend = $%ld",dept.CostCentre,dept.Spend];
 }
 
 //number rows in list
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [_reportData count];
+    if(tableView == self.dashTable)
+    {
+        return [_reportData count];
+    }
+    else if (tableView == self.stockTable)
+    {
+        return [stockData count];
+    }
+    else
+        
+        return 0;
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *simpleTableIdentifier = @"SimpleTableCell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
-    
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:simpleTableIdentifier];
+    if(tableView == self.dashTable)
+    {
+        static NSString *simpleTableIdentifier = @"SimpleTableCell";
+        
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+        
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:simpleTableIdentifier];
+        }
+        
+        cell.textLabel.text = [_reportData objectAtIndex:indexPath.row];
+        return cell;
     }
+    else if (tableView == self.stockTable)
+    {
+        static NSString *simpleTableIdentifier = @"SimpleTableCell";
+        
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+        
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:simpleTableIdentifier];
+        }
+        
+        Asset *asset = [[Asset alloc] init];
+        asset = [stockData objectAtIndex:indexPath.row];
+        
+        cell.textLabel.text = [NSString stringWithFormat:@"%@: %ld items in stock", asset.Asset_name,(long)asset.Asset_stock ];
+        return cell;
+    }
+    else
+        return 0;
     
-    cell.textLabel.text = [_reportData objectAtIndex:indexPath.row];
-    return cell;
+}
+
+-(void) getLowStock
+{
+    
+    NSString *assignedAsset = [NSString stringWithFormat:@"http://77.100.69.163:8888/ords/rob/hr/Dashboard/lowStock"];
+    
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:assignedAsset]];
+    
+    __block NSMutableDictionary *json;
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                               json = [NSJSONSerialization JSONObjectWithData:data
+                                                                      options:0
+                                                                        error:nil];
+                               NSLog(@"Async JSON: %@", json);//output the json dictionary raw
+                               
+                               NSArray * responseArr = json[@"items"];
+                               
+                               for(NSDictionary *item in responseArr)//for every department in the responseArr, add their respective details to the arrays
+                               {
+                                   Asset *asset = [[Asset alloc] init];
+                                   asset.Asset_name = [item valueForKey:@"asset_name"];
+                                   asset.Asset_stock = [[item valueForKey:@"asset_stock"]integerValue];
+                                   
+                                   [stockData addObject:asset];
+                               }
+                               
+                               NSLog(@"low stock get complete");
+                               [self.stockTable reloadData];
+                           }];
+    //release spinner animation
+    [[self.view viewWithTag:12] removeFromSuperview];
 }
 
 -(void) getDepartmentSpend
@@ -300,12 +345,14 @@
                                [self sumOfCostCentres];
                                
                                NSLog(@"dept spend");
+                               [self.pieChartLeft reloadData];
                            }];
     //release spinner animation
     [[self.view viewWithTag:12] removeFromSuperview];
 }
 -(void) sumOfCostCentres
 {
+    //consolidates each department spend into an array of singular departments with total spend.
     for(int i=0;i<tempDepartments.count; i++)
     {
         Department *dept = [tempDepartments objectAtIndex:i];
@@ -318,11 +365,15 @@
             if ([dept.CostCentre isEqualToString:dept2.CostCentre])
             {
                 spend = spend + dept2.Spend;
+                //remove so it doesnt get used again
                 [tempDepartments removeObjectAtIndex:j];
+                //j-1 in response to removing object (rectifies index values)
+                j=j-1;
                 
             }
         }
         
+        //add the object after total spend has been calculated for that department.
         dept.Spend = spend;
         [departments addObject:dept];
     }
@@ -347,6 +398,28 @@
     NSInteger result = [numberString integerValue];
     
     return result;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(tableView == self.dashTable)
+    {
+        if([[_reportData objectAtIndex:indexPath.row] isEqualToString:@"Low Stock Items"])
+        {
+            [stockData removeAllObjects];
+            [self getLowStock];
+            self.pieChartLeft.hidden = YES;
+            self.stockView.hidden = NO;
+        }
+        else if ([[_reportData objectAtIndex:indexPath.row] isEqualToString:@"Spending per Department"])
+        {
+            self.pieChartLeft.hidden = NO;
+            self.stockView.hidden = YES;
+            
+        }
+    }
+    
+    
 }
 
 

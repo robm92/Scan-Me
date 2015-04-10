@@ -21,7 +21,10 @@
 @property (strong, nonatomic) IBOutlet UIButton *downArrow;
 @property(nonatomic, strong) NSMutableArray *slices;
 @property(nonatomic, strong) NSArray        *sliceColors;
+@property (weak, nonatomic) IBOutlet UILabel *lblInfo;
+@property (weak, nonatomic) IBOutlet UIView *stockView;
 
 @property (weak, nonatomic) IBOutlet UITableView *dashTable;
+@property (weak, nonatomic) IBOutlet UITableView *stockTable;
 
 @end

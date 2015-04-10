@@ -39,6 +39,13 @@
 		D4AD2DF01ACECDC9004428F0 /* Asset.m in Sources */ = {isa = PBXBuildFile; fileRef = D4AD2DEF1ACECDC9004428F0 /* Asset.m */; };
 		D4AD2DF21AD03528004428F0 /* background2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D4AD2DF11AD03528004428F0 /* background2.jpg */; };
 		D4AD2DF51AD2E41D004428F0 /* InventoryScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = D4AD2DF41AD2E41D004428F0 /* InventoryScanner.m */; };
+		D4AD2DFD1AD53486004428F0 /* JBBarChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4AD2DF81AD53486004428F0 /* JBBarChartView.m */; };
+		D4AD2DFE1AD53486004428F0 /* JBChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4AD2DFA1AD53486004428F0 /* JBChartView.m */; };
+		D4AD2DFF1AD53486004428F0 /* JBLineChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4AD2DFC1AD53486004428F0 /* JBLineChartView.m */; };
+		D4AD2E051AD53D29004428F0 /* DashboardVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D4AD2E041AD53D29004428F0 /* DashboardVC.m */; };
+		D4AD2E0E1AD54C41004428F0 /* JBBarChartFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4AD2E081AD54C41004428F0 /* JBBarChartFooterView.m */; };
+		D4AD2E0F1AD54C41004428F0 /* JBLineChartFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4AD2E0A1AD54C41004428F0 /* JBLineChartFooterView.m */; };
+		D4AD2E101AD54C41004428F0 /* JBChartHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4AD2E0D1AD54C41004428F0 /* JBChartHeaderView.m */; };
 		D4E2092D1A712E4300D52EAE /* barcode.png in Resources */ = {isa = PBXBuildFile; fileRef = D4E2092A1A712E4300D52EAE /* barcode.png */; };
 		D4E2092E1A712E4300D52EAE /* manager.png in Resources */ = {isa = PBXBuildFile; fileRef = D4E2092B1A712E4300D52EAE /* manager.png */; };
 		D4E2092F1A712E4300D52EAE /* package.png in Resources */ = {isa = PBXBuildFile; fileRef = D4E2092C1A712E4300D52EAE /* package.png */; };
@@ -110,6 +117,20 @@
 		D4AD2DF11AD03528004428F0 /* background2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = background2.jpg; sourceTree = "<group>"; };
 		D4AD2DF31AD2E41D004428F0 /* InventoryScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InventoryScanner.h; sourceTree = "<group>"; };
 		D4AD2DF41AD2E41D004428F0 /* InventoryScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InventoryScanner.m; sourceTree = "<group>"; };
+		D4AD2DF71AD53486004428F0 /* JBBarChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JBBarChartView.h; sourceTree = "<group>"; };
+		D4AD2DF81AD53486004428F0 /* JBBarChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JBBarChartView.m; sourceTree = "<group>"; };
+		D4AD2DF91AD53486004428F0 /* JBChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JBChartView.h; sourceTree = "<group>"; };
+		D4AD2DFA1AD53486004428F0 /* JBChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JBChartView.m; sourceTree = "<group>"; };
+		D4AD2DFB1AD53486004428F0 /* JBLineChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JBLineChartView.h; sourceTree = "<group>"; };
+		D4AD2DFC1AD53486004428F0 /* JBLineChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JBLineChartView.m; sourceTree = "<group>"; };
+		D4AD2E031AD53D29004428F0 /* DashboardVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DashboardVC.h; sourceTree = "<group>"; };
+		D4AD2E041AD53D29004428F0 /* DashboardVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DashboardVC.m; sourceTree = "<group>"; };
+		D4AD2E071AD54C41004428F0 /* JBBarChartFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JBBarChartFooterView.h; sourceTree = "<group>"; };
+		D4AD2E081AD54C41004428F0 /* JBBarChartFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JBBarChartFooterView.m; sourceTree = "<group>"; };
+		D4AD2E091AD54C41004428F0 /* JBLineChartFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JBLineChartFooterView.h; sourceTree = "<group>"; };
+		D4AD2E0A1AD54C41004428F0 /* JBLineChartFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JBLineChartFooterView.m; sourceTree = "<group>"; };
+		D4AD2E0C1AD54C41004428F0 /* JBChartHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JBChartHeaderView.h; sourceTree = "<group>"; };
+		D4AD2E0D1AD54C41004428F0 /* JBChartHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JBChartHeaderView.m; sourceTree = "<group>"; };
 		D4E2092A1A712E4300D52EAE /* barcode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = barcode.png; sourceTree = "<group>"; };
 		D4E2092B1A712E4300D52EAE /* manager.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = manager.png; sourceTree = "<group>"; };
 		D4E2092C1A712E4300D52EAE /* package.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = package.png; sourceTree = "<group>"; };
@@ -166,6 +187,7 @@
 		D443BB0419F53FAF009BB5D4 /* RestTest */ = {
 			isa = PBXGroup;
 			children = (
+				D4AD2DF61AD53486004428F0 /* JBChart */,
 				D4AD2DEA1ACEBBA9004428F0 /* Asset */,
 				D47388E41A938653004EA9DD /* Department */,
 				D46B071E1A8B8D1200FE80B0 /* Employee */,
@@ -283,6 +305,59 @@
 			name = Asset;
 			sourceTree = "<group>";
 		};
+		D4AD2DF61AD53486004428F0 /* JBChart */ = {
+			isa = PBXGroup;
+			children = (
+				D4AD2E1B1AD55FBE004428F0 /* Base */,
+				D4AD2E111AD559CD004428F0 /* Misc */,
+				D4AD2E061AD54C41004428F0 /* Footers */,
+				D4AD2E0B1AD54C41004428F0 /* Headers */,
+				D4AD2DF71AD53486004428F0 /* JBBarChartView.h */,
+				D4AD2DF81AD53486004428F0 /* JBBarChartView.m */,
+				D4AD2DF91AD53486004428F0 /* JBChartView.h */,
+				D4AD2DFA1AD53486004428F0 /* JBChartView.m */,
+				D4AD2DFB1AD53486004428F0 /* JBLineChartView.h */,
+				D4AD2DFC1AD53486004428F0 /* JBLineChartView.m */,
+				D4AD2E031AD53D29004428F0 /* DashboardVC.h */,
+				D4AD2E041AD53D29004428F0 /* DashboardVC.m */,
+			);
+			path = JBChart;
+			sourceTree = "<group>";
+		};
+		D4AD2E061AD54C41004428F0 /* Footers */ = {
+			isa = PBXGroup;
+			children = (
+				D4AD2E071AD54C41004428F0 /* JBBarChartFooterView.h */,
+				D4AD2E081AD54C41004428F0 /* JBBarChartFooterView.m */,
+				D4AD2E091AD54C41004428F0 /* JBLineChartFooterView.h */,
+				D4AD2E0A1AD54C41004428F0 /* JBLineChartFooterView.m */,
+			);
+			path = Footers;
+			sourceTree = "<group>";
+		};
+		D4AD2E0B1AD54C41004428F0 /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				D4AD2E0C1AD54C41004428F0 /* JBChartHeaderView.h */,
+				D4AD2E0D1AD54C41004428F0 /* JBChartHeaderView.m */,
+			);
+			path = Headers;
+			sourceTree = "<group>";
+		};
+		D4AD2E111AD559CD004428F0 /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Misc;
+			sourceTree = "<group>";
+		};
+		D4AD2E1B1AD55FBE004428F0 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -394,20 +469,27 @@
 			buildActionMask = 2147483647;
 			files = (
 				D40CEB7D1A49B71700157309 /* BarcodeTable.m in Sources */,
+				D4AD2DFD1AD53486004428F0 /* JBBarChartView.m in Sources */,
 				D443BB0E19F53FAF009BB5D4 /* ViewController.m in Sources */,
 				D463FC251A7E8C9C00509871 /* NewAsset.m in Sources */,
 				D463FC191A7E7AB400509871 /* Employees.m in Sources */,
 				D46B07211A8B8D3000FE80B0 /* Employee.m in Sources */,
+				D4AD2E0E1AD54C41004428F0 /* JBBarChartFooterView.m in Sources */,
 				D465C09B1A02998F00BC278B /* BarcodeViewController.m in Sources */,
+				D4AD2DFF1AD53486004428F0 /* JBLineChartView.m in Sources */,
 				D473DDE21A7AA429003E250B /* Dashboard.m in Sources */,
+				D4AD2E101AD54C41004428F0 /* JBChartHeaderView.m in Sources */,
 				D463FC1C1A7E7F7E00509871 /* NewEmployee.m in Sources */,
 				D4AD2DE61ACEBAAA004428F0 /* Model.xcdatamodeld in Sources */,
+				D4AD2DFE1AD53486004428F0 /* JBChartView.m in Sources */,
 				D4AD2DF01ACECDC9004428F0 /* Asset.m in Sources */,
 				D463FC1F1A7E817900509871 /* EmployeeDetails.m in Sources */,
 				D443BB0819F53FAF009BB5D4 /* main.m in Sources */,
 				D443BB2D19F542EE009BB5D4 /* IOSRequest.m in Sources */,
+				D4AD2E051AD53D29004428F0 /* DashboardVC.m in Sources */,
 				D47388E71A938667004EA9DD /* Department.m in Sources */,
 				D463FC221A7E87CB00509871 /* Assets.m in Sources */,
+				D4AD2E0F1AD54C41004428F0 /* JBLineChartFooterView.m in Sources */,
 				D4AD2DF51AD2E41D004428F0 /* InventoryScanner.m in Sources */,
 				D4AC46551A7A9A9E0092158F /* XYPieChart.m in Sources */,
 				D48A56E61A67E07500587E68 /* AppDelegate.m in Sources */,
