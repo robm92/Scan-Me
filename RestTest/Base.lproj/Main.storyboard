@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14D72i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D131" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -53,7 +53,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="bEG-ac-uMO" kind="modal" id="x7i-VH-F9L"/>
+                                    <action selector="btnLogin:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="N97-FH-UMe"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -81,6 +81,7 @@
                     <navigationItem key="navigationItem" title="Login" id="hsg-xb-Nbs"/>
                     <connections>
                         <outlet property="btnSignIn" destination="XZF-md-4Sh" id="Lju-Bz-VT1"/>
+                        <segue destination="bEG-ac-uMO" kind="modal" identifier="loginSegue" id="1rY-P3-FA1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
@@ -506,6 +507,7 @@
             <objects>
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="bEG-ac-uMO" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" id="98U-Q4-SbX"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="Mgf-KP-42x">
                         <autoresizingMask key="autoresizingMask"/>
@@ -992,7 +994,7 @@
                                     <constraint firstItem="r6k-cJ-Gmt" firstAttribute="trailing" secondItem="xqa-bb-Fhh" secondAttribute="trailing" id="yZf-yU-jeq"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="egj-x9-Fw9">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="egj-x9-Fw9">
                                 <rect key="frame" x="0.0" y="28" width="320" height="328"/>
                                 <subviews>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="cOu-oH-6G3">

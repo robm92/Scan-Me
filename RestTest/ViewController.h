@@ -15,13 +15,7 @@
 @property (nonatomic, strong) NSDictionary * jsonArray;
 @property (nonatomic, strong) NSMutableArray * userArray;
 @property (weak, nonatomic) IBOutlet UILabel *lblMainTitle;
-
-- (IBAction)btnFetch:(id)sender;
-
--(id)jsonPostRequest:(NSData *)jsonRequestData;
--(void) jsonSetup;
--(void) retrieveData;
-
+- (IBAction)btnLogin:(id)sender;
 
 @end
 

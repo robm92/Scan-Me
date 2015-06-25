@@ -44,9 +44,26 @@
     //round corners of button
     btnAddEmp.layer.cornerRadius = 10;
     btnAddEmp.clipsToBounds = YES;
+    [self loadTabImages];
     
     [super viewDidLoad];
     
+}
+
+-(void) loadTabImages
+{
+    //solves odd issue where tab bar images aren't loaded until selected...
+    UITabBar *tabBar = self.tabBarController.tabBar;
+    //UITabBarItem *item0 = [tabBar.items objectAtIndex:0]; unused - already selected on load
+    UITabBarItem *item1 = [tabBar.items objectAtIndex:1];
+    UITabBarItem *item2 = [tabBar.items objectAtIndex:2];
+    
+    [item1 setImage:[[UIImage imageNamed:@"package.png"] imageWithRenderingMode:UIImageRenderingModeAutomatic]];
+    
+    [item1 setSelectedImage:[[UIImage imageNamed:@"package.png"] imageWithRenderingMode:UIImageRenderingModeAutomatic]];
+    [item2 setImage:[[UIImage imageNamed:@"pie_chart-36.png"] imageWithRenderingMode:UIImageRenderingModeAutomatic]];
+    
+    [item2 setSelectedImage:[[UIImage imageNamed:@"pie_chart-36.png"] imageWithRenderingMode:UIImageRenderingModeAutomatic]];
 }
 
 - (void) retrieveData

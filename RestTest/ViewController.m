@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "IOSRequest.h"
+#import <LocalAuthentication/LocalAuthentication.h>
 
 #define getDataURL @"http://192.168.0.7:8888/ords/rob/hr/employees/"
 
@@ -43,92 +44,53 @@
     return NO;
 }
 
-- (void) retrieveData
-{
+- (IBAction)btnLogin:(id)sender {
     
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:getDataURL]];
+    LAContext *context = [[LAContext alloc] init];
     
-    __block NSMutableDictionary *json;
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:[NSOperationQueue mainQueue]
-                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-                               json = [NSJSONSerialization JSONObjectWithData:data
-                                                                      options:0
-                                                                        error:nil];
-                               NSLog(@"Async JSON: %@", json);//output the json dictionary raw
-                               //make two arrays to hold the json instances sequentialy
-                               userArray=[[NSMutableArray alloc]init];
-                               
-                               
-                               NSArray * responseArr = json[@"items"];//make an array which holds each json 'user'
-                               
-                               for(NSDictionary * dict in responseArr)//for every user in the responseArr, add their respective details to the arrays
-                               {
-                                   //User * u = [[User alloc] init];
-                                   //u.Name = [dict valueForKey:@"name"];
-                                   //u.Age = [dict valueForKey:@"age"];
-                                   //[userArray addObject: u];
-                                   
-                               }
-                               
-                               //User * user = [[User alloc] init];
-                               //user = [userArray objectAtIndex:(0)];
-                               
-                               //txtName.text = user.Name;
-                               //txtAge.text = user.Age;
-                               
-                               //[self jsonPostRequest:data];
-                               
-                            
-                           }];
-
-}
--(void)jsonSetup
-{
-//    NSString *ID = @"8";
-//    NSString *NAME = txtPostName.text;
-//    NSString *AGE = txtPostAge.text;
-//    
-//    NSDictionary *tmp = [[NSDictionary alloc] initWithObjectsAndKeys:ID,@"ID",NAME,@"NAME",AGE,@"AGE", nil];
-//    
-//    NSError *error;
-//    NSData *postData = [NSJSONSerialization dataWithJSONObject:tmp options:0 error:&error];
-//    [self jsonPostRequest:postData];
-    
-    
-}
-
--(id)jsonPostRequest:(NSData *)jsonRequestData
-{
-    //URL for the request
-    NSURL *url = [NSURL URLWithString:getDataURL];
-    //the request
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20];
-    NSLog(@"The Json post request: %@", request);
-    
-    //bind request with jsonrequestdata
-    [request setHTTPMethod:@"POST"]; //n.b its a post request, not get
-    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonRequestData length]] forHTTPHeaderField:@"Content-Length"];
-    [request setHTTPBody:jsonRequestData];//set jsonRequestData into body
-    
-    //send sync request
-    NSURLResponse *response = nil;
     NSError *error = nil;
-    
-    NSData *result = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-    NSLog(@"The Json post result: %@", result);
-    if(error ==nil)
-        return result;
-    
-    return nil;
-     
-    
-}
+    if ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error]) {
+        [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
+                localizedReason:@"Use Touch ID to login"
+                          reply:^(BOOL success, NSError *error) {
+                              
+                              if (error) {
+                                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                                  message:@"There was a problem verifying your identity."
+                                                                                 delegate:nil
+                                                                        cancelButtonTitle:@"Ok"
+                                                                        otherButtonTitles:nil];
+                                  [alert show];
+                                  return;
+                              }
+                              
+                              if (success) {
+                                 //authenticated
+                                  [self performSegueWithIdentifier:@"loginSegue" sender:self];
+                                  
+                              } else {
+                                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                                  message:@"Touch ID invalid, Please login using username and password."
+                                                                                 delegate:nil
+                                                                        cancelButtonTitle:@"Ok"
+                                                                        otherButtonTitles:nil];
+                                  [alert show];
+                              }
+                              
+                          }];
+        
+    } else {
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                        message:@"Your device cannot authenticate using TouchID."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        [alert show];
+        
+    }
 
-- (IBAction)btnFetch:(id)sender {
     
-   [self jsonSetup];
+  
 }
 @end

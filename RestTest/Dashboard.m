@@ -118,6 +118,7 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [tempDepartments removeAllObjects];
     [super viewDidAppear:animated];
     [departments removeAllObjects];
     [self getDepartmentSpend];
